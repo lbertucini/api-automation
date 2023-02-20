@@ -1,5 +1,7 @@
 /// <reference types="cypress" />
 
+const userberta = 'berta test' 
+
 describe('Testing Users', () => {
   it('Create a new user', () => {
 
@@ -7,8 +9,8 @@ describe('Testing Users', () => {
       method: 'POST',
       url: '/user',
         body: {
-          id: '333',
-          username: 'berta test',
+          id: 333,
+          username: userberta,
           firstName: 'lucas',
           lastName: 'tester',
           email: 'lucas_tester@tester.com',
@@ -50,6 +52,72 @@ describe('Testing Users', () => {
   
   })
 
+  //it('Check the array of users', () =>{})
 
+  it('Login into the system', () => {
+    cy.request({
+      method: 'GET',
+      url: '/user/login?username=id lucas&password=id tester'
+    }).then((response) => {
+    expect(response.status).to.equal(200);
+    //TODO//expect(response.body.username).to.equal('lucas') ***must be checked by the message field***
+
+      })
+    })
+
+  it('Logout into the system', () => {
+    cy.request({
+      method: 'GET',
+      url: '/user/logout'
+    }).then((response) => {
+    expect(response.status).to.equal(200);
+    })
+  })
+  
+  it('Search user by username', () => {
+    cy.request({
+      method: 'GET',
+      url: '/user/berta test'
+    })
+    .then((response) => {
+    expect(response.status).to.equal(200)
+    expect(response.body.id).to.equal(333)
+  
+
+})
+  })
+
+  it('Update user', () =>{
+    cy.request({
+      method: 'PUT',
+      url: '/user/berta test',
+        body: {
+        id: 1000,
+        username: 'berta updated',
+        firstName: 'berta',
+        lastName: 'updated',
+        email: 'berta_updated@tester.com',
+        password: 'bertaupdated123!',
+        phone: '(33)99994-5544',
+        userStatus: 100
+        }
+    })
+    .then((response) => {
+      expect(response.status).to.equal(200)
+      expect(response.body.message).to.equal('1000')
+      })
+  })
+
+  //it('Validate updated user', () => {})
+
+  it('Delete user', () => {
+    cy.request({
+      method: 'DELETE',
+      url: '/user/berta test'
+    }).then((response) => {
+    expect(response.status).to.equal(200);
+      })
+  })
+  
 
 })
