@@ -129,4 +129,67 @@ describe('Managing pets', () => {
     })
     }) 
 
-  })
+  it('Check inventory of the store by status', () => {
+    
+    cy.request({
+      method: 'GET',
+      url: '/store/inventory?Status=sold',
+    }).then((response) => {
+      expect(response.status).to.equal(200)
+      expect(response.body.sold).to.exist
+    })
+    })
+
+  it('Add a new order', () => {
+
+    cy.request({
+      method: 'POST',
+      url: '/store/order',
+        body: {
+            "id": 99,
+            "petId": 39873333,
+            "quantity": 2,
+            "shipDate": "2023-03-07T12:02:05.333Z",
+            "status": "On Transit",
+            "complete": false,
+            }
+          }).then((response) => {
+            expect(response.status).to.equal(200)
+            expect(response.body.id).to.equal(99)
+            expect(response.body.quantity).to.equal(2)
+            expect(response.body.petId).to.equal(39873333)
+            expect(response.body.shipDate).to.equal("2023-03-07T12:02:05.333+0000")
+            expect(response.body.status).to.equal("On Transit")
+            expect(response.body.complete).to.equal(false)
+            })
+          })
+
+  it('Check order by id', () => {
+    
+    cy.request({
+      method: 'GET',
+      url: '/store/order/99',
+    }).then((response) => {
+      expect(response.status).to.equal(200)
+      expect(response.body.id).to.equal(99)
+      expect(response.body.quantity).to.equal(2)
+      expect(response.body.petId).to.equal(39873333)
+      expect(response.body.shipDate).to.equal("2023-03-07T12:02:05.333+0000")
+      expect(response.body.status).to.equal("On Transit")
+      expect(response.body.complete).to.equal(false)
+      }) 
+    })
+
+  it('Delete order by id', () => {
+  
+    cy.request({
+      method: 'DELETE',
+      url: '/store/order/99',
+    }).then((response) => {
+      expect(response.status).to.equal(200)
+      expect(response.body.message).to.equal('99')
+      }) 
+    })
+  
+  
+})
